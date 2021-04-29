@@ -12,25 +12,65 @@ let kittens = [];
  * then add that data to the kittens list.
  * Then reset the form
  */
-function addKitten(event) {}
+function addKitten(event) {
+  event.preventDefault();
+  let form = event.target;
+  let catImage = form.name.clicked + "?set=set4";
+  console.log(catImage);
+
+  //
+
+  let kitten = {
+    id: generateId(),
+    name: form.name.clicked,
+    image: `https://robohash.org/${catImage}`,
+  };
+  kittens.push(kitten);
+  console.log(kitten);
+
+  saveKittens();
+  form.reset();
+}
 
 /**
  * Converts the kittens array to a JSON string then
  * Saves the string to localstorage at the key kittens
  */
-function saveKittens() {}
+function saveKittens() {
+  window.localStorage.setItem("kittens", JSON.stringify(kittens));
+  drawKittens();
+}
 
 /**
  * Attempts to retrieve the kittens string from localstorage
  * then parses the JSON string into an array. Finally sets
  * the kittens array to the retrieved array
  */
-function loadKittens() {}
+function loadKittens() {
+  let storedKittens = JSON.parse(window.localStorage.getItem("kittens"));
+  if (storedKittens) {
+    kittens = storedKittens;
+  }
+}
 
 /**
  * Draw all of the kittens to the kittens element
  */
-function drawKittens() {}
+function drawKittens() {
+  let kittenElem = document.getElementById("kittens");
+  let kittenTemplate = "";
+  kittens.forEach((kitten) => {
+    kittenTemplate += `
+    <div class="kitten-card">
+    <img src=${kitten.image}?set=set4>
+    <h3>${kitten.name}</h3>
+    <input type="number" id="petCounter" value="5">
+    <button onClick="pet(id)">PET</button>
+    <button>FEED</button>
+    </div>`;
+  });
+  kittenElem.innerHTML = kittenTemplate;
+}
 
 /**
  * Find the kitten in the array by its id
@@ -38,7 +78,7 @@ function drawKittens() {}
  * @return {Kitten}
  */
 function findKittenById(id) {
-  return kittens.find(k => k.id == id);
+  return kittens.find((k) => k.id == id);
 }
 
 /**
@@ -50,7 +90,11 @@ function findKittenById(id) {
  * save the kittens
  * @param {string} id
  */
-function pet(id) {}
+function pet(id) {
+  let input = document.getElementById("petCounter");
+  input.value = parseInt(input.value) + 1;
+  console.log("click" + id);
+}
 
 /**
  * Find the kitten in the array of kittens
@@ -90,3 +134,10 @@ function generateId() {
     Math.floor(Math.random() * 10000000)
   );
 }
+
+// function findCat() {
+//   let findImage = <img src="https://robohash.org/YOUR-TEXT.png"></img>;
+// }
+
+loadKittens();
+drawKittens();
