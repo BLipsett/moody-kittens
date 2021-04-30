@@ -15,19 +15,31 @@ let kittens = [];
 function addKitten(event) {
   event.preventDefault();
   let form = event.target;
-  let catImage = form.name.clicked + "?set=set4";
-  console.log(catImage);
+  let kittenID = generateId();
+  let kittenName = form.name.value;
+  let kittenMood = "Happy";
+  let kittenImage = "https://robohash.org/" + kittenName + "?set=set4";
+  let kitten = kittens.find((kitten) => kitten.name == kittenName);
 
-  //
+  if (kittenName == "") {
+    alert("Must enter a valid name");
+    return;
+  }
 
-  let kitten = {
-    id: generateId(),
-    name: form.name.clicked,
-    image: `https://robohash.org/${catImage}`,
-  };
-  kittens.push(kitten);
-  console.log(kitten);
-
+  if (kitten) {
+    alert("Cannot have kittens with the same name");
+  } else {
+    kitten = {
+      id: kittenID,
+      name: kittenName,
+      image: kittenImage,
+      mood: kittenMood,
+      tolerance: 5,
+    };
+    // }
+    kittens.push(kitten);
+    console.log(kitten);
+  }
   saveKittens();
   form.reset();
 }
@@ -62,8 +74,11 @@ function drawKittens() {
   kittens.forEach((kitten) => {
     kittenTemplate += `
     <div class="kitten-card">
-    <img src=${kitten.image}?set=set4>
-    <h3>${kitten.name}</h3>
+    <h4>${kitten.id}</h4>
+    <img class="kitten" src=${kitten.image}?set=set4>
+    <h3><span>${kitten.name}</span></h3>
+    <h4><span>Mood: ${kitten.mood}<span></h4>
+    <h4>Tolerance: <span>${kitten.tolerance}</span></h4>
     <input type="number" id="petCounter" value="5">
     <button onClick="pet(id)">PET</button>
     <button>FEED</button>
